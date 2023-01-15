@@ -116,6 +116,36 @@ func _ready() -> void:
 		campaign_select_button.get_popup().add_item(next_campaign_name)
 
 
+func _resolve_random_event() -> void:
+	var i := rng.randi_range(0, RANDOM_EVENT_TYPES.size()-1)
+	var random_event_type: String = RANDOM_EVENT_TYPES[i]
+	while (random_event_type in NPC_EVENTS and characters_list.get_child_count() == 0) or (random_event_type in THREAD_EVENTS and threads_list.get_child_count() == 0):
+		i = rng.randi_range(0, RANDOM_EVENT_TYPES.size()-1)
+		random_event_type = RANDOM_EVENT_TYPES[i]
+	
+	var output := "\n%s" % [random_event_type]
+	if random_event_type in NPC_EVENTS:
+		var random_character: String = characters_list.get_child(rng.randi_range(0, characters_list.get_child_count()-1)).data
+		output += " involving %s" % [random_character]
+	elif random_event_type in THREAD_EVENTS:
+		var random_thread: String = threads_list.get_child(rng.randi_range(0, threads_list.get_child_count()-1)).data
+		output += " about %s" % [random_thread]
+	
+	output += "\n\t"
+	var action_idx := rng.randi_range(0, 99)
+	var subject_idx := rng.randi_range(0, 99)
+	var action: String = ACTIONS[action_idx]
+	var subject: String = SUBJECTS[subject_idx]
+	output += "Context: %s %s\n" % [action, subject]
+	
+	log_box.bbcode_text += output
+	_update_scroll()
+
+
+func _update_scroll() -> void:
+	log_scroll_container.scroll_vertical = int(log_scroll_container.get_v_scrollbar().max_value)
+
+
 func _on_campaign_name_text_changed(text: String) -> void:
 	save_campaign_button.disabled = text.empty()
 
@@ -204,10 +234,6 @@ func _on_campaign_select_button_pressed(index: int) -> void:
 		entry.data = thread
 
 
-func _update_scroll() -> void:
-	log_scroll_container.scroll_vertical = int(log_scroll_container.get_v_scrollbar().max_value)
-
-
 func _on_CommentLine_changed(text: String) -> void:
 	add_comment_button.disabled =  text.empty()
 
@@ -267,32 +293,6 @@ func _on_Answers_pressed(likelihood: int) -> void:
 		log_box.bbcode_text += "[color=#ffff00] + Random Event[/color]"
 		_resolve_random_event()
 	
-	_update_scroll()
-
-
-func _resolve_random_event() -> void:
-	var i := rng.randi_range(0, RANDOM_EVENT_TYPES.size()-1)
-	var random_event_type: String = RANDOM_EVENT_TYPES[i]
-	while (random_event_type in NPC_EVENTS and characters_list.get_child_count() == 0) or (random_event_type in THREAD_EVENTS and threads_list.get_child_count() == 0):
-		i = rng.randi_range(0, RANDOM_EVENT_TYPES.size()-1)
-		random_event_type = RANDOM_EVENT_TYPES[i]
-	
-	var output := "\n%s" % [random_event_type]
-	if random_event_type in NPC_EVENTS:
-		var random_character: String = characters_list.get_child(rng.randi_range(0, characters_list.get_child_count()-1)).data
-		output += " involving %s" % [random_character]
-	elif random_event_type in THREAD_EVENTS:
-		var random_thread: String = threads_list.get_child(rng.randi_range(0, threads_list.get_child_count()-1)).data
-		output += " about %s" % [random_thread]
-	
-	output += "\n\t"
-	var action_idx := rng.randi_range(0, 99)
-	var subject_idx := rng.randi_range(0, 99)
-	var action: String = ACTIONS[action_idx]
-	var subject: String = SUBJECTS[subject_idx]
-	output += "Context: %s %s\n" % [action, subject]
-	
-	log_box.bbcode_text += output
 	_update_scroll()
 
 
