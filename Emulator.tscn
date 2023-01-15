@@ -42,7 +42,6 @@ unique_name_in_owner = true
 margin_left = 445.0
 margin_right = 551.0
 margin_bottom = 24.0
-disabled = true
 text = "New Campaign"
 
 [node name="CampaignSelectButton" type="MenuButton" parent="VBoxContainer2/HBoxContainer2"]
