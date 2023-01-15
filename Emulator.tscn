@@ -28,6 +28,7 @@ unique_name_in_owner = true
 margin_right = 298.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
+placeholder_text = "Enter a campaign name"
 
 [node name="SaveCampaignButton" type="Button" parent="VBoxContainer2/HBoxContainer2"]
 unique_name_in_owner = true
